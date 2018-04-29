@@ -6,6 +6,7 @@ public class BoardManager {
     public static string MENU_NAME = "Menu";
     public static int WIDTH_NODES = 30;
     public static int HEIGHT_NODES = 20;
+
     public static BoardManager _instance;
     private int[,] maxtrixNodes = new int[WIDTH_NODES, HEIGHT_NODES];
 

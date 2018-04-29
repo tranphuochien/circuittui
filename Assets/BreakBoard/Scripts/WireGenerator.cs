@@ -8,6 +8,7 @@ public class WireGenerator : MonoBehaviour
     private BoardManager boardManager;
     public Material lineMaterial;
     public float lineWidth;
+    private float lineZ = -0.5f;
 
     private void Start()
     {
@@ -43,11 +44,11 @@ public class WireGenerator : MonoBehaviour
         if (boardManager.isClickFinish == 1)
         {
             boardManager.isClickFinish = 0;
-            boardManager.secondClick = new Vector3(finalPosition.x, finalPosition.y, -1f);
+            boardManager.secondClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
             DrawWire(boardManager.firstClick, boardManager.secondClick);
         } else
         {
-            boardManager.firstClick = new Vector3(finalPosition.x, finalPosition.y, -1f);
+            boardManager.firstClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
             boardManager.isClickFinish = 1;
         }
     }
@@ -55,20 +56,20 @@ public class WireGenerator : MonoBehaviour
     private void DrawWire(Vector3 firstClick, Vector3 secondClick)
     {
         List<Vector3> listPoints = new List<Vector3>();
-        listPoints.Add(firstClick);
+        listPoints.Add(new Vector3(firstClick.x, firstClick.y, lineZ));
         if(firstClick.x == secondClick.x || firstClick.y == secondClick.y)
         {
-            listPoints.Add(secondClick);            
+            listPoints.Add(new Vector3(secondClick.x, secondClick.y, lineZ));            
         } else
         {
             bool compareX = firstClick.x < secondClick.x;
             bool compareY = firstClick.y < secondClick.y;
             if (!(compareX ^ compareY)) {
-                listPoints.Add(new Vector3(firstClick.x, secondClick.y, -1f));
+                listPoints.Add(new Vector3(firstClick.x, secondClick.y, lineZ));
             }
             if (compareX ^ compareY)
             {
-                listPoints.Add(new Vector3(secondClick.x, firstClick.y, -1f));
+                listPoints.Add(new Vector3(secondClick.x, firstClick.y, lineZ));
             }
             listPoints.Add(secondClick);
         }
@@ -90,11 +91,9 @@ public class WireGenerator : MonoBehaviour
     private Vector3 PlaceCubeNear(Vector3 clickPoint)
     {
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
-        //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;
-        RadialMenuController menu = Resources.FindObjectsOfTypeAll<RadialMenuController>()[0];// GameObject.Find(BoardManager.MENU_NAME).GetComponent<RadialMenuController>();
-        menu.ZoomOutWhenAppear(finalPosition);
+        RadialMenuController menu = Resources.FindObjectsOfTypeAll<RadialMenuController>()[0];
+        menu.ZoomOutWhenAppear(new Vector3(finalPosition.x, finalPosition.y, 2 * lineZ));
         
         return finalPosition;
-        //GameObject.CreatePrimitive(PrimitiveType.Sphere).transform.position = nearPoint;
     }
 }

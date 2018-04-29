@@ -4,17 +4,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
 
-public class RadialMenuController : MonoBehaviour
+public class RadialMenuController : MonoBehaviour, IPointerClickHandler
 {
+    const string item_dien_tro = "dien_tro";
+    const string item_diode = "diode";
+    const string item_tu_dien = "tu_dien";
+    const string item_cancle = "cancle";
     private String currentItemChosen = "center_menu";
     private RectTransform rectTransformMainMenu;
     private GameObject rootMenu;
+    private String nameCurItem;
+
     List<Button> childButtons = new List<Button>();
     Vector3[] buttonGoalPos;
     bool open = false;
     public int buttonDistance = 150;
     public float speed = 2f;
+
+    enum MenuItems : int
+    {
+        DIENTRO = 1,
+        DIODE,
+        TUDIEN,
+        CANCLE
+    }
 
     // Use this for initialization
     void Start()
@@ -76,15 +91,39 @@ public class RadialMenuController : MonoBehaviour
         StartCoroutine(MoveButtons());
     }
 
+    private void ExportItemByName(String name)
+    {
+        if (name == null || name == item_cancle)
+        {
+            return;
+        }
+
+        GameObject item = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Vector2 positionItem = GameObject.Find(BoardManager.MENU_NAME).transform.position;
+        item.transform.position = positionItem;
+
+        switch (name)
+        {
+            case item_dien_tro:
+                item.GetComponent<MeshRenderer>().material = Resources.Load(item_dien_tro, typeof(Material)) as Material;
+                break;
+            case item_tu_dien:
+                item.GetComponent<MeshRenderer>().material = Resources.Load(item_tu_dien, typeof(Material)) as Material;
+                break;
+            case item_diode:
+                item.GetComponent<MeshRenderer>().material = Resources.Load(item_diode, typeof(Material)) as Material;
+                break;
+        }
+    }
 
     public void ItemClick(GameObject gameObject)
     {
         OpenMenu();
+        nameCurItem = gameObject.transform.gameObject.name;
 
-        if (gameObject.transform.gameObject.name.Equals("cancle"))
+        if (nameCurItem.Equals(item_cancle))
         {
             ZoomInWhenDisappear();
-            //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = GameObject.Find(BoardManager.MENU_NAME).transform.position;
             return;
         }
 
@@ -171,6 +210,29 @@ public class RadialMenuController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            //onLeft.Invoke();
+        }
+        else if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            HandleCloseMenuAndExportItem();
+        }
+        else if (eventData.button == PointerEventData.InputButton.Middle)
+        {
+            //onMiddle.Invoke();
+        }
+    }
+
+    private void HandleCloseMenuAndExportItem()
+    {
+        ZoomInWhenDisappear();
+        ExportItemByName(nameCurItem);
 
     }
 }
