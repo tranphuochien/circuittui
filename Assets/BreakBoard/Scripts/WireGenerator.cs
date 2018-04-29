@@ -8,7 +8,7 @@ public class WireGenerator : MonoBehaviour
     private BoardManager boardManager;
     public Material lineMaterial;
     public float lineWidth;
-    private float lineZ = -0.5f;
+    private float lineZ = -0.3f;
 
     private void Start()
     {
@@ -43,9 +43,12 @@ public class WireGenerator : MonoBehaviour
 
         if (boardManager.isClickFinish == 1)
         {
-            boardManager.isClickFinish = 0;
+            //boardManager.isClickFinish = 0;
             boardManager.secondClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
             DrawWire(boardManager.firstClick, boardManager.secondClick);
+
+            //Swap data to prepare generate wire with next node
+            boardManager.firstClick = boardManager.secondClick;
         } else
         {
             boardManager.firstClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);

@@ -23,13 +23,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
     public int buttonDistance = 150;
     public float speed = 2f;
 
-    enum MenuItems : int
-    {
-        DIENTRO = 1,
-        DIODE,
-        TUDIEN,
-        CANCLE
-    }
+   
 
     // Use this for initialization
     void Start()
