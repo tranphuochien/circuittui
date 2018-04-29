@@ -90,8 +90,10 @@ public class WireGenerator : MonoBehaviour
     private Vector3 PlaceCubeNear(Vector3 clickPoint)
     {
         var finalPosition = grid.GetNearestPointOnGrid(clickPoint);
-        GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;
-
+        //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = finalPosition;
+        RadialMenuController menu = Resources.FindObjectsOfTypeAll<RadialMenuController>()[0];// GameObject.Find(BoardManager.MENU_NAME).GetComponent<RadialMenuController>();
+        menu.ZoomOutWhenAppear(finalPosition);
+        
         return finalPosition;
         //GameObject.CreatePrimitive(PrimitiveType.Sphere).transform.position = nearPoint;
     }

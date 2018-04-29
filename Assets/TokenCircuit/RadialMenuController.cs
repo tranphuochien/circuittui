@@ -9,6 +9,7 @@ public class RadialMenuController : MonoBehaviour
 {
     private String currentItemChosen = "center_menu";
     private RectTransform rectTransformMainMenu;
+    private GameObject rootMenu;
     List<Button> childButtons = new List<Button>();
     Vector3[] buttonGoalPos;
     bool open = false;
@@ -18,8 +19,9 @@ public class RadialMenuController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        gameObject.SetActive(false);
-        GameObject.Find("Menu").transform.localScale = new Vector3(0, 0.01f, 0);
+        rootMenu = GameObject.Find(BoardManager.MENU_NAME);
+        rootMenu.SetActive(false);
+        rootMenu.transform.localScale = new Vector3(0, 0.01f, 0);
 
         childButtons = this.GetComponentsInChildren<Button>(true).Where(x => x.gameObject.transform.parent != transform.parent).ToList();
         rectTransformMainMenu = this.GetComponent<RectTransform>();
@@ -34,14 +36,19 @@ public class RadialMenuController : MonoBehaviour
             b.gameObject.SetActive(false);
         }
 
-        ZoomOutWhenAppear();
-
+        //ZoomOutWhenAppear();
     }
 
-    public void ZoomOutWhenAppear()
+    public void ZoomOutWhenAppear(Vector3 position)
     {
-        gameObject.SetActive(true);
+        rootMenu.SetActive(true);
+        rootMenu.transform.localPosition = position;
         StartCoroutine(ZoomOutMenu());
+    }
+
+    public void ZoomInWhenDisappear()
+    {
+        StartCoroutine(ZoomInMenu());
     }
 
     public void OpenMenu()
@@ -76,8 +83,12 @@ public class RadialMenuController : MonoBehaviour
 
         if (gameObject.transform.gameObject.name.Equals("cancle"))
         {
+            ZoomInWhenDisappear();
+            //GameObject.CreatePrimitive(PrimitiveType.Cube).transform.position = GameObject.Find(BoardManager.MENU_NAME).transform.position;
             return;
         }
+
+        //Create item in center menu
         GameObject clone = Instantiate(gameObject);
         RectTransform rectTransform = clone.GetComponent<RectTransform>();
         clone.transform.gameObject.name = currentItemChosen;
@@ -89,16 +100,29 @@ public class RadialMenuController : MonoBehaviour
 
     private IEnumerator ZoomOutMenu()
     {
-        GameObject cylinder = GameObject.Find("Menu");
         int loops = 0;
         while (loops <= 5)
         {
             yield return new WaitForSeconds(0.001f);
 
 
-            cylinder.transform.localScale = new Vector3(loops, 0.01f, loops);
+            rootMenu.transform.localScale = new Vector3(loops, 0.01f, loops);
             loops++;
         }
+    }
+
+    private IEnumerator ZoomInMenu()
+    {
+        int loops = 5;
+        while (loops >= 0)
+        {
+            yield return new WaitForSeconds(0.001f);
+
+
+            rootMenu.transform.localScale = new Vector3(loops, 0.01f, loops);
+            loops--;
+        }
+        rootMenu.SetActive(true);
     }
 
     public GameObject GetCurrentItem()
