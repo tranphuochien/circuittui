@@ -43,7 +43,15 @@ public class WireGenerator : MonoBehaviour
 
         if (boardManager.isClickFinish == 1)
         {
-            //boardManager.isClickFinish = 0;
+            Debug.Log("next " + boardManager.isConstructing);
+            if (!boardManager.isConstructing)
+            {
+                Debug.Log("stop");
+                boardManager.isClickFinish = 0;
+                return;
+            }
+            Debug.Log("continue");
+
             boardManager.secondClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
             DrawWire(boardManager.firstClick, boardManager.secondClick);
 
@@ -52,6 +60,7 @@ public class WireGenerator : MonoBehaviour
         } else
         {
             boardManager.firstClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
+            boardManager.isConstructing = true;
             boardManager.isClickFinish = 1;
         }
     }
