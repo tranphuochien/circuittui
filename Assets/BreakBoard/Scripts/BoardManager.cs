@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BoardManager {
@@ -10,9 +12,23 @@ public class BoardManager {
     public static BoardManager _instance;
     private int[,] maxtrixNodes = new int[WIDTH_NODES, HEIGHT_NODES];
     private Dictionary<int, GameObject> circuitComponent = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> boardWareHouse = new Dictionary<int, GameObject>();
     public bool isConstructing = false;
     public int isClickFinish = 0;
     public Vector3 firstClick = new Vector3();
+
+    public void ClearBoard()
+    {
+        int count = boardWareHouse.Count;
+        for(int i = 0; i < count; i++)
+        {
+            String name = boardWareHouse.Values.ElementAt(i).gameObject.name;
+            GameObject.Destroy(GameObject.Find(name));
+        }
+        boardWareHouse.Clear();
+        ResetParam();
+    }
+
     public Vector3 secondClick = new Vector3();
 
     private BoardManager() { }
@@ -43,6 +59,9 @@ public class BoardManager {
         }
         int count = circuitComponent.Count;
         circuitComponent.Add(++count, gameObject);
+        count = 0;
+        count = boardWareHouse.Count;
+        boardWareHouse.Add(++count, gameObject);
     }
 
     public bool HaveColisionOnPathGenerateWire(Vector2 firstClick, Vector2 secondClick, int typeGenerate)

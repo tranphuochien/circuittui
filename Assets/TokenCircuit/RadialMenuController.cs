@@ -95,7 +95,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
         GameObject item = GameObject.CreatePrimitive(PrimitiveType.Cube);
         Vector2 positionItem = GameObject.Find(BoardManager.MENU_NAME).transform.position;
         item.transform.position = positionItem;
-
+        item.gameObject.name = "Cube_" + DateTime.Now.ToString();
         switch (name)
         {
             case item_dien_tro:
