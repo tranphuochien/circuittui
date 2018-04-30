@@ -16,6 +16,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
     private RectTransform rectTransformMainMenu;
     private GameObject rootMenu;
     private String nameCurItem;
+    private BoardManager boardManager;
 
     List<Button> childButtons = new List<Button>();
     Vector3[] buttonGoalPos;
@@ -23,11 +24,10 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
     public int buttonDistance = 150;
     public float speed = 2f;
 
-   
-
     // Use this for initialization
     void Start()
     {
+        boardManager = BoardManager.GetInstance();
         rootMenu = GameObject.Find(BoardManager.MENU_NAME);
         rootMenu.SetActive(false);
         rootMenu.transform.localScale = new Vector3(0, 0.01f, 0);
@@ -108,6 +108,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
                 item.GetComponent<MeshRenderer>().material = Resources.Load(item_diode, typeof(Material)) as Material;
                 break;
         }
+        boardManager.AddObjectToCircuit(item);
     }
 
     public void ItemClick(GameObject gameObject)

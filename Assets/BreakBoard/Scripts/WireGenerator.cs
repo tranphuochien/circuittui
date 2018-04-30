@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WireGenerator : MonoBehaviour
@@ -34,6 +35,26 @@ public class WireGenerator : MonoBehaviour
                 GenerateWire(finalPosition);
             }
         }
+
+        if (Input.GetMouseButtonDown(0) && !boardManager.isConstructing)
+        {
+            boardManager.isConstructing = true;
+            AutoCompleteWire();
+            boardManager.ResetParam();
+        }
+    }
+
+    private void AutoCompleteWire()
+    {
+        Dictionary<int, GameObject> circuit = boardManager.GetCircuitComponent();
+        if (circuit.Count <= 0)
+        {
+            return;
+        }
+        Vector3 secondPos = circuit.Values.ElementAt(0).transform.position;
+        Vector3 firstPos = circuit.Values.ElementAt(circuit.Count - 1).transform.position;
+
+        DrawWire(firstPos, secondPos);
     }
 
     private void GenerateWire(Vector3 finalPosition)
@@ -43,14 +64,11 @@ public class WireGenerator : MonoBehaviour
 
         if (boardManager.isClickFinish == 1)
         {
-            Debug.Log("next " + boardManager.isConstructing);
             if (!boardManager.isConstructing)
             {
-                Debug.Log("stop");
                 boardManager.isClickFinish = 0;
                 return;
             }
-            Debug.Log("continue");
 
             boardManager.secondClick = new Vector3(finalPosition.x, finalPosition.y, lineZ);
             DrawWire(boardManager.firstClick, boardManager.secondClick);
@@ -69,21 +87,37 @@ public class WireGenerator : MonoBehaviour
     {
         List<Vector3> listPoints = new List<Vector3>();
         listPoints.Add(new Vector3(firstClick.x, firstClick.y, lineZ));
-        if(firstClick.x == secondClick.x || firstClick.y == secondClick.y)
+        if (firstClick.x == secondClick.x || firstClick.y == secondClick.y)
         {
-            listPoints.Add(new Vector3(secondClick.x, secondClick.y, lineZ));            
-        } else
+            listPoints.Add(new Vector3(secondClick.x, secondClick.y, lineZ));
+        }
+        else
         {
             bool compareX = firstClick.x < secondClick.x;
             bool compareY = firstClick.y < secondClick.y;
-            if (!(compareX ^ compareY)) {
-                listPoints.Add(new Vector3(firstClick.x, secondClick.y, lineZ));
+            if (!(compareX ^ compareY))
+            {
+                if (!boardManager.HaveColisionOnPathGenerateWire(firstClick, secondClick, 1))
+                {
+                    listPoints.Add(new Vector3(firstClick.x, secondClick.y, lineZ));
+                } else
+                {
+                    listPoints.Add(new Vector3(secondClick.x, firstClick.y, lineZ));
+                }
             }
             if (compareX ^ compareY)
             {
-                listPoints.Add(new Vector3(secondClick.x, firstClick.y, lineZ));
+                if (!boardManager.HaveColisionOnPathGenerateWire(firstClick, secondClick, 2))
+                {
+                    listPoints.Add(new Vector3(secondClick.x, firstClick.y, lineZ));
+                }
+                else
+                {
+                    listPoints.Add(new Vector3(firstClick.x, secondClick.y, lineZ));
+                }
             }
-            listPoints.Add(secondClick);
+           
+            listPoints.Add(new Vector3(secondClick.x, secondClick.y, lineZ));
         }
         CreateLine(listPoints);
     }
@@ -92,12 +126,15 @@ public class WireGenerator : MonoBehaviour
     {
         //Create Line object
         var gameObject = new GameObject();
+        gameObject.name = "line_" + DateTime.Now.ToString();
         var lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.material = lineMaterial;
         lineRenderer.positionCount = listPoints.Count;
         lineRenderer.SetPositions(listPoints.ToArray());
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
+
+        boardManager.AddObjectToCircuit(gameObject);
     }
 
     private Vector3 PlaceCubeNear(Vector3 clickPoint)

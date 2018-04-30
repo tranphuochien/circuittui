@@ -21,7 +21,8 @@ public class ScissorController : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        Debug.Log("Click cay keo");
+        Debug.Log("Scissor clicked");
         boardManager.isConstructing = false;
+        boardManager.isClickFinish = 0;
     }
 }
