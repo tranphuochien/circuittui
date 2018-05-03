@@ -63,7 +63,7 @@ public class WireGenerator : MonoBehaviour
         lines.ForEach(line =>
         {
             LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-            if (lineRenderer.positionCount == 2)
+            if (lineRenderer.positionCount == 3)
             {
                 a = lineRenderer.GetPosition(0);
                 b = lineRenderer.GetPosition(1);
