@@ -92,11 +92,12 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        GameObject item = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //GameObject item = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObject item = Instantiate(Resources.Load(name, typeof(GameObject))) as GameObject;
         Vector2 positionItem = GameObject.Find(BoardManager.MENU_NAME).transform.position;
-        item.transform.position = positionItem;
-        item.gameObject.name = "Cube_" + DateTime.Now.ToString();
-        switch (name)
+        item.transform.position = new Vector3(positionItem.x, positionItem.y, -0.5f);
+        item.gameObject.name = name + "_" + DateTime.Now.ToString();
+        /*switch (name)
         {
             case item_dien_tro:
                 item.GetComponent<MeshRenderer>().material = Resources.Load(item_dien_tro, typeof(Material)) as Material;
@@ -108,6 +109,8 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
                 item.GetComponent<MeshRenderer>().material = Resources.Load(item_diode, typeof(Material)) as Material;
                 break;
         }
+        */
+
         boardManager.AddObjectToCircuit(item);
     }
 
@@ -127,6 +130,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
         RectTransform rectTransform = clone.GetComponent<RectTransform>();
         clone.transform.gameObject.name = currentItemChosen;
         clone.transform.parent = this.GetComponent<Button>().transform;
+        rectTransform.anchoredPosition = new Vector3(0, 0, 0);
         rectTransform.localPosition = new Vector3(0, 0, 0);
         rectTransform.sizeDelta = new Vector2(35, 35);
         rectTransform.localScale = new Vector3(1, 1, 1);
