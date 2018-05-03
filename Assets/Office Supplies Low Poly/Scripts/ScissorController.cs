@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VolumetricLines;
 
 public class ScissorController : MonoBehaviour {
 
@@ -25,4 +27,6 @@ public class ScissorController : MonoBehaviour {
         boardManager.isConstructing = false;
         boardManager.isClickFinish = 0;
     }
+
+    
 }

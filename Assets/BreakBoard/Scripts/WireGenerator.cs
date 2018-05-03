@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VolumetricLines;
 
 public class WireGenerator : MonoBehaviour
 {
@@ -40,8 +41,52 @@ public class WireGenerator : MonoBehaviour
         {
             boardManager.isConstructing = true;
             AutoCompleteWire();
+            replaceWire();
             boardManager.ResetParam();
         }
+    }
+
+    private void replaceWire()
+    {
+        Dictionary<int, GameObject> currentCircuit = boardManager.GetCircuitComponent();
+        List<GameObject> lines = new List<GameObject>();
+        GameObject newLine;
+        Vector3 a, b, c;
+        foreach (KeyValuePair<int, GameObject> item in currentCircuit)
+        {
+            string prefix = item.Value.gameObject.name.Substring(0, 4);
+            if (prefix == "line")
+            {
+                lines.Add(item.Value);
+            }
+        }
+        lines.ForEach(line =>
+        {
+            LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+            if (lineRenderer.positionCount == 2)
+            {
+                a = lineRenderer.GetPosition(0);
+                b = lineRenderer.GetPosition(1);
+                c = lineRenderer.GetPosition(2);
+                newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
+                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.GetComponent<VolumetricLineBehavior>().StartPos = a;
+                newLine.GetComponent<VolumetricLineBehavior>().EndPos = b;
+                newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
+                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.GetComponent<VolumetricLineBehavior>().StartPos = b;
+                newLine.GetComponent<VolumetricLineBehavior>().EndPos = c;
+            }
+            else
+            {
+                a = lineRenderer.GetPosition(0);
+                b = lineRenderer.GetPosition(1);
+                newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
+                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.GetComponent<VolumetricLineBehavior>().StartPos = a;
+                newLine.GetComponent<VolumetricLineBehavior>().EndPos = b;
+            }
+        });
     }
 
     private void AutoCompleteWire()

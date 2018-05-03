@@ -125,8 +125,8 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
         //Create item in center menu
         GameObject clone = Instantiate(gameObject);
         RectTransform rectTransform = clone.GetComponent<RectTransform>();
-        clone.transform.gameObject.name = currentItemChosen;
-        clone.transform.parent = this.GetComponent<Button>().transform;
+        clone.transform.SetParent(this.GetComponent<Button>().transform);
+        rectTransform.anchoredPosition = new Vector3(0, 0, 0);
         rectTransform.localPosition = new Vector3(0, 0, 0);
         rectTransform.sizeDelta = new Vector2(35, 35);
         rectTransform.localScale = new Vector3(1, 1, 1);

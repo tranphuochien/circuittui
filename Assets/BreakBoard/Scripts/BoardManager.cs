@@ -11,8 +11,8 @@ public class BoardManager {
 
     public static BoardManager _instance;
     private int[,] maxtrixNodes = new int[WIDTH_NODES, HEIGHT_NODES];
-    private Dictionary<int, GameObject> circuitComponent = new Dictionary<int, GameObject>();
-    private Dictionary<int, GameObject> boardWareHouse = new Dictionary<int, GameObject>();
+    private static Dictionary<int, GameObject> circuitComponent = new Dictionary<int, GameObject>();
+    private static Dictionary<int, GameObject> boardWareHouse = new Dictionary<int, GameObject>();
     public bool isConstructing = false;
     public int isClickFinish = 0;
     public Vector3 firstClick = new Vector3();
