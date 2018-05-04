@@ -183,7 +183,14 @@ namespace VolumetricLines
 			get { return m_endPos; }
 			set
 			{
-				m_endPos = value * 10;
+                if (m_startPos.x == value.x)
+                {
+                    value.y = (value.y - m_startPos.y) * 100 + m_startPos.y;
+                } else
+                {
+                    value.x = (value.x - m_startPos.x) * 100 + m_startPos.x;
+                }
+				m_endPos = value;
 				SetStartAndEndPoints(m_startPos, m_endPos);
 			}
 		}

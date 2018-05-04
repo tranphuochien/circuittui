@@ -69,11 +69,13 @@ public class WireGenerator : MonoBehaviour
                 b = lineRenderer.GetPosition(1);
                 c = lineRenderer.GetPosition(2);
                 newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
-                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.transform.localPosition = a;
+                newLine.transform.rotation = Quaternion.Euler(0, 0, 0);
                 newLine.GetComponent<VolumetricLineBehavior>().StartPos = a;
                 newLine.GetComponent<VolumetricLineBehavior>().EndPos = b;
                 newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
-                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.transform.localPosition = b;
+                newLine.transform.rotation = Quaternion.Euler(0, 0, 0);
                 newLine.GetComponent<VolumetricLineBehavior>().StartPos = b;
                 newLine.GetComponent<VolumetricLineBehavior>().EndPos = c;
             }
@@ -82,7 +84,8 @@ public class WireGenerator : MonoBehaviour
                 a = lineRenderer.GetPosition(0);
                 b = lineRenderer.GetPosition(1);
                 newLine = (GameObject)Instantiate(Resources.Load("VolumetricLine"));
-                newLine.transform.localPosition = new Vector3(0, 0, 0);
+                newLine.transform.localPosition = a;
+                newLine.transform.rotation = Quaternion.Euler(0, 0, 0);
                 newLine.GetComponent<VolumetricLineBehavior>().StartPos = a;
                 newLine.GetComponent<VolumetricLineBehavior>().EndPos = b;
             }
