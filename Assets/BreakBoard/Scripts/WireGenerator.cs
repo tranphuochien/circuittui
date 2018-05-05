@@ -90,6 +90,9 @@ public class WireGenerator : MonoBehaviour
                 newLine.GetComponent<VolumetricLineBehavior>().EndPos = b;
             }
         });
+
+        //GameObject.Find("Diagram").SetActive(true);
+        //Resources.FindObjectsOfTypeAll(Diagram).SetActive(true);
     }
 
     private void AutoCompleteWire()
