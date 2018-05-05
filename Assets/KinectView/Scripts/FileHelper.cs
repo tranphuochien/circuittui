@@ -9,7 +9,7 @@ public static class FileHelper
     public static readonly int DELAY_INFARED_FRAME_WRITE = 100;
     public static readonly int DELAY_COLOR_FRAME_WRITE = 300;
 
-    public static void WritePNGPicture(byte[] data, string nameFile, bool isOverWrite)
+    public static void WritePNGPicture(byte[] data, string nameFile, bool isOverWrite, ref bool isRenamed)
     {
         MemoryStream ms = new MemoryStream(data);
         Image image = Image.FromStream(ms);
@@ -21,11 +21,12 @@ public static class FileHelper
         }
         else
         {
-            String timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            name = nameFile + timestamp + ".png";
+            //String timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            name = nameFile;
         }
 
         image.Save(name);
         Debug.Log("Finish write " + name);
+        isRenamed = false;
     }
 }

@@ -13,6 +13,10 @@ public class InfraredSourceManager : MonoBehaviour
     private ushort[] _Data;
     private byte[] _RawData;
     private byte[] rawByte;
+    private Thread mThread;
+    private static bool isRenamed = true;
+    private const string DATA_FILE = "data.png";
+    private const string TEMP_DATA_FILE = "tempdata.png";
 
     private int mCount = 0;
     byte[] src;
@@ -46,7 +50,7 @@ public class InfraredSourceManager : MonoBehaviour
 
     void writePicture()
     {
-        FileHelper.WritePNGPicture(src, "E:\\infraredSource", false);
+        FileHelper.WritePNGPicture(src, "E:\\" + TEMP_DATA_FILE, false, ref isRenamed);
     }
 
 
@@ -75,6 +79,25 @@ public class InfraredSourceManager : MonoBehaviour
 
     void Update()
     {
+        if (mThread != null)
+        {
+            if (mThread.IsAlive)
+            {
+            } else
+            {
+                if (!isRenamed)
+                {
+                    if (File.Exists("E:\\" + DATA_FILE))
+                    {
+                        System.IO.File.Delete("E:\\" + DATA_FILE);
+                    }
+
+                    System.IO.File.Move("E:\\" + TEMP_DATA_FILE, "E:\\" + DATA_FILE);
+                    isRenamed = true;
+                }
+            }
+        }
+
         if (_Reader != null)
         {
             var frame = _Reader.AcquireLatestFrame();
@@ -100,8 +123,8 @@ public class InfraredSourceManager : MonoBehaviour
 
                 if (mCount == 50)
                 {
-                    var thread = new Thread(writePicture);
-                    thread.Start();
+                    mThread = new Thread(writePicture);
+                    mThread.Start();
 
                 }
                 mCount = (++mCount) % FileHelper.DELAY_INFARED_FRAME_WRITE;

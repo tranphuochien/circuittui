@@ -102,7 +102,7 @@ public class MultiSourceManager : MonoBehaviour
 
     private void writePicture()
     {
-        FileHelper.WritePNGPicture(src, "E:\\colorSource", false);
+        //FileHelper.WritePNGPicture(src, "E:\\colorSource", false);
     }
 
     void OnApplicationQuit()
