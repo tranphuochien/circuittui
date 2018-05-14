@@ -29,7 +29,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
     {
         boardManager = BoardManager.GetInstance();
         rootMenu = GameObject.Find(BoardManager.MENU_NAME);
-        rootMenu.SetActive(false);
+        rootMenu.SetActive(true);
         rootMenu.transform.localScale = new Vector3(0, 0.01f, 0);
 
         childButtons = this.GetComponentsInChildren<Button>(true).Where(x => x.gameObject.transform.parent != transform.parent).ToList();
@@ -45,7 +45,7 @@ public class RadialMenuController : MonoBehaviour, IPointerClickHandler
             b.gameObject.SetActive(false);
         }
 
-        //ZoomOutWhenAppear();
+        ZoomOutWhenAppear(new Vector3(0,0,0));
     }
 
     public void ZoomOutWhenAppear(Vector3 position)
