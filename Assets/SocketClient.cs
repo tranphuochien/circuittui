@@ -8,7 +8,7 @@ using System.Threading;
 
 public class SocketClient : MonoBehaviour {
 
-	// Use this for initialization
+    // Use this for initialization
 
 	public GameObject hero;
     public static bool IsReceived = false;
@@ -80,6 +80,7 @@ public class SocketClient : MonoBehaviour {
                 xPos = float.Parse(xPosText);
                 yPos = float.Parse(yPosText);
                 IsReceived = true;
+
                 //xPos *= 0.021818f;
             }
             catch(Exception e){
