@@ -13,7 +13,9 @@ public class GenerateChildObject : MonoBehaviour {
     private Vector2 ObjectCenter;
     private Vector2 VObjectScale;
     public GameObject plane;
+    public static GameObject listCubes;
     private static bool isCalibrated = false;
+    public static Vector3 curPos = new Vector3(0, 0, 0);
     private float y0;
     private float x0;
     private float deltaY;
@@ -21,6 +23,8 @@ public class GenerateChildObject : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        listCubes = GameObject.Find("ListCubes");
+        listCubes.SetActive(false);
         plane = GameObject.Find("Menu");
         GetCoordinateFromDetection();
     }
@@ -32,6 +36,8 @@ public class GenerateChildObject : MonoBehaviour {
             //Destroy(GameObject.Find("ABCD"));
             if (isCalibrated)
             {
+                listCubes.SetActive(true);
+                RayCastController.beginRayCasting = true;
                 if (GameObject.Find("Phone") != null)
                 {
                     GameObject.Find("Phone").SetActive(false);
@@ -57,7 +63,7 @@ public class GenerateChildObject : MonoBehaviour {
                 }
                 phone = GameObject.Find("Phone");
                 //CalibrateCoordination();
-                Calibrate2();
+                Calibrate();
             }
         }
         
@@ -72,7 +78,7 @@ public class GenerateChildObject : MonoBehaviour {
     private List<Vector2> listDataY = new List<Vector2>();
     private int a = 0;
    
-    private void Calibrate2()
+    private void Calibrate()
     {
         if (listData.Count < maxData)
         {
@@ -111,7 +117,7 @@ public class GenerateChildObject : MonoBehaviour {
     {
         ObjectCenter -= ScreenCenter;
         Vector3 newPos = new Vector3((ObjectCenter.x - x0) / deltaX, 0.1f, (y0 - ObjectCenter.y) / deltaY);
-
+        curPos = newPos;
         plane.transform.localPosition = Vector3.Lerp(plane.transform.localPosition, newPos, Time.deltaTime * 5.0f);
     }
 

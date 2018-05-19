@@ -10,7 +10,6 @@ public class SocketClient : MonoBehaviour {
 
     // Use this for initialization
 
-	public GameObject hero;
     public static bool IsReceived = false;
 	public static float xPos = 10.0f;
     public static float yPos = 0.0f;
@@ -96,7 +95,6 @@ public class SocketClient : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		hero.transform.position = new Vector3(xPos-6.0f,-3,0);
 	}
 
 	void OnApplicationQuit(){
