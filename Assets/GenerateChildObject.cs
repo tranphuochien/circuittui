@@ -70,7 +70,8 @@ public class GenerateChildObject : MonoBehaviour {
     }
 
     int maxData_temp = 90;
-    int maxData = 12;
+    int maxData = 15;
+    int maxNumX = 9, maxNumY = 6;
     GameObject phone;
     private List<Vector2> listData_temp = new List<Vector2>();
     private List<Vector2> listDataY_temp = new List<Vector2>();
@@ -84,7 +85,7 @@ public class GenerateChildObject : MonoBehaviour {
         {
             if (listData_temp.Count < maxData_temp)
             {
-                phone.transform.localPosition = a < 6 ? new Vector3(a, 0.1f, 0) : new Vector3(0, 0.1f, -(a % 6));
+                phone.transform.localPosition = a < maxNumX ? new Vector3(a, 0.1f, 0) : new Vector3(0, 0.1f, -((a - maxNumX) % maxNumY));
                 for (int temp = 0; temp < 500; temp++) ;
                 listData_temp.Add(new Vector2(SocketClient.xPos - ScreenCenter.x, SocketClient.yPos - ScreenCenter.y));
             }
@@ -98,14 +99,17 @@ public class GenerateChildObject : MonoBehaviour {
         if (listData.Count == maxData)
         {
             phone.SetActive(false);
-            listData[6] = listData[0];
+            listData[maxNumX] = listData[0];
             x0 = listData[0].x;
             y0 = listData[0].y;
             List<float> listX = new List<float>(), listY = new List<float>();
-            for (int i = 1; i <= 5; i++)
+            for (int i = 1; i < maxNumX; i++)
             {
                 listX.Add(listData[i].x - listData[i - 1].x);
-                listY.Add(listData[i + 6].y - listData[i + 5].y);
+                if (i < maxNumY)
+                {
+                    listY.Add(listData[i + maxNumX].y - listData[i + maxNumX - 1].y);
+                } 
             }
             deltaX = listX.Average(); //(listData[3].x - listData[0].x) / 3.0f;
             deltaY = listY.Average(); //(listData[7].y - listData[4].y) / 3.0f;
