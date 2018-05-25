@@ -68,7 +68,7 @@ public class SocketClient : MonoBehaviour {
 				byte[] data = client.Receive(ref anyIP);
 
 				string text = Encoding.UTF8.GetString(data);
-				print (">> " + text);
+				//print (">> " + text);
 				lastReceivedUDPPacket=text;
 				allReceivedUDPPackets=allReceivedUDPPackets+text;
 
