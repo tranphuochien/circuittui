@@ -23,6 +23,7 @@ public class SocketV2 : MonoBehaviour {
     public List<SocketT2h> __ClientSockets { get; set; }
     List<string> _names = new List<string>();
     private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    private Socket connectedSocket;
 
     // Use this for initialization
     void Start () {
@@ -32,7 +33,7 @@ public class SocketV2 : MonoBehaviour {
 
     private void SetupServer()
     {
-        _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 100));
+        _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 1234));
         _serverSocket.Listen(1);
         _serverSocket.BeginAccept(new AsyncCallback(AppceptCallback), null);
     }
@@ -40,6 +41,7 @@ public class SocketV2 : MonoBehaviour {
     private void AppceptCallback(IAsyncResult ar)
     {
         Socket socket = _serverSocket.EndAccept(ar);
+        connectedSocket = socket;
         __ClientSockets.Add(new SocketT2h(socket));
         Debug.Log(socket.RemoteEndPoint.ToString());
 
@@ -127,12 +129,20 @@ public class SocketV2 : MonoBehaviour {
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
     }
 
-    void Sendata(Socket socket, string noidung)
+    public void Sendata(Socket socket, string noidung)
     {
         byte[] data = Encoding.ASCII.GetBytes(noidung);
         socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
         _serverSocket.BeginAccept(new AsyncCallback(AppceptCallback), null);
     }
+
+    public void SendData(string noidung)
+    {
+        byte[] data = Encoding.ASCII.GetBytes(noidung);
+        connectedSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), connectedSocket);
+        _serverSocket.BeginAccept(new AsyncCallback(AppceptCallback), null);
+    }
+
     private void SendCallback(IAsyncResult AR)
     {
         Socket socket = (Socket)AR.AsyncState;
