@@ -41,11 +41,11 @@ public class RayCastController : MonoBehaviour {
 
     void ResetColor ()
     {
-        int children = GenerateChildObject.listCubes.transform.childCount;
+       /* int children = GenerateChildObject.listCubes.transform.childCount;
         for (int i = 0; i < children; ++i)
         {
             GameObject child = GenerateChildObject.listCubes.transform.GetChild(i).gameObject;
             child.GetComponent<Renderer>().material.color = Color.white;
-        }
+        }*/
     }
 }

@@ -14,7 +14,7 @@ public class GenerateChildObject : MonoBehaviour {
     private Vector2 ObjectCenter;
     private Vector2 VObjectScale;
     public GameObject ObjFollowToken;
-    public static GameObject listCubes;
+    //public static GameObject listCubes;
     private static bool isCalibrated = false;
     public static Vector3 curPos = new Vector3(0, 0, 0);
     private float y0;
@@ -27,8 +27,8 @@ public class GenerateChildObject : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //Find gameobject keep world map 
-        listCubes = GameObject.Find("ListCubes");
-        listCubes.SetActive(false);
+        //listCubes = GameObject.Find("ListCubes");
+        //listCubes.SetActive(false);
 
         ObjFollowToken = GameObject.Find(MENU);
         GetCoordinateFromDetection();
@@ -43,8 +43,9 @@ public class GenerateChildObject : MonoBehaviour {
             //Destroy(GameObject.Find("ABCD"));
             if (isCalibrated)
             {
-                listCubes.SetActive(true);
-                RayCastController.beginRayCasting = true;
+                //listCubes.SetActive(true);
+                //RayCastController.beginRayCasting = true;
+                RoadCameraManager.beginRayCasting = true;
                 if (GameObject.Find(CALIBRATE_PLANE) != null)
                 {
                     GameObject.Find(CALIBRATE_PLANE).SetActive(false);
@@ -94,7 +95,7 @@ public class GenerateChildObject : MonoBehaviour {
                 //Move CalibratePlane to collect raw data position from detetor system
                 CalibratePlane.transform.localPosition = count < maxNumX ? new Vector3(count, 0.1f, 0) : new Vector3(0, 0.1f, -((count - maxNumX) % maxNumY));
                 //Delay for Detect system track object again after movement
-                DelayUIThread(50);
+                DelayUIThread(30);
                 //Mapping raw coordinate to ScreenCenter coordinate
                 listData_temp.Add(new Vector2(SocketClient.xPos - ScreenCenter.x, SocketClient.yPos - ScreenCenter.y));
             }
@@ -124,6 +125,7 @@ public class GenerateChildObject : MonoBehaviour {
             deltaY = listY.Average();
             isCalibrated = true;
             GameObject.Find("Plane").GetComponent<MeshRenderer>().material = Resources.Load("wood", typeof(Material)) as Material;
+            GameObject.Find("Map").transform.position = new Vector3(13.57f, 9.94f, -2.71f);
         }
     }
 
@@ -135,21 +137,24 @@ public class GenerateChildObject : MonoBehaviour {
     private void MovePlane()
     {
         ObjectCenter -= ScreenCenter;
-        Vector3 newPos = new Vector3((ObjectCenter.x - x0) / deltaX, 0.1f, (y0 - ObjectCenter.y) / deltaY);
+        Vector3 newPos = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, (y0 - ObjectCenter.y) / deltaY);
         curPos = newPos;
         ObjFollowToken.transform.localPosition = Vector3.Lerp(ObjFollowToken.transform.localPosition, newPos, Time.deltaTime * 5.0f);
     }
+
+    float zPlaneChild = 2.75f;
 
     private void GenerateChild()
     {
         ObjFollowToken = GameObject.CreatePrimitive(PrimitiveType.Plane);
         ObjFollowToken.transform.name = "ABCD";
         ObjFollowToken.transform.SetParent(this.gameObject.transform);
+        //ObjFollowToken.transform.SetParent(GameObject.Find("Map").transform);
         ObjectCenter -= ScreenCenter;
         ObjFollowToken.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x - x0) / deltaX, 0.1f, (y0 - ObjectCenter.y) / deltaY);
+        ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, -(y0 - ObjectCenter.y) / deltaY);
         ObjFollowToken.transform.localScale = new Vector3(VObjectScale.x, 1, VObjectScale.y);
-        ObjFollowToken.GetComponent<MeshRenderer>().material = Resources.Load("white_transparent", typeof(Material)) as Material;
+        ObjFollowToken.GetComponent<MeshRenderer>().material = Resources.Load("white 2", typeof(Material)) as Material;
     }
 
     private void CalculateScale(Vector2 topLeftScreen, Vector2 bottomRightScreen, Vector2 topLeftObject, Vector2 bottomRightObject)
@@ -158,8 +163,8 @@ public class GenerateChildObject : MonoBehaviour {
         //Vector2 ObjectSize = bottomRightObject - topLeftObject;
         //VObjectScale.x = ObjectSize.x / ScreenSize.x;
         //VObjectScale.y = ObjectSize.y / ScreenSize.y;
-        VObjectScale.x = 0.26f;
-        VObjectScale.y = 0.38f;
+        VObjectScale.x = 0.1f;
+        VObjectScale.y = 0.1f;
     }
 
     private Vector2 CalculateCenter(Vector2 topLeftObject, Vector2 bottomRightObject)
@@ -171,8 +176,8 @@ public class GenerateChildObject : MonoBehaviour {
 
     private void GetCoordinateFromDetection()
     {
-        TopLeftScreen = new Vector2(18, 59);
-        BottomRightScreen = new Vector2(564, 433);
+        TopLeftScreen = new Vector2(97, 60);
+        BottomRightScreen = new Vector2(595, 400);
         ScreenCenter = CalculateCenter(TopLeftScreen, BottomRightScreen);
 
         //TopLeftObject = new Vector2(152, 312);

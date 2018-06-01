@@ -75,12 +75,14 @@ function Awake() {
     screenY = Screen.height;
 
     //Set the camera's field of view according to Screen size so map's visible area is maximized.
-    if (screenY > screenX) {
+    // Disable project's camera
+    /*if (screenY > screenX) {
         mycam.fieldOfView = 72.5;
     }
     else {
         mycam.fieldOfView = 95 - (28 * (screenX * 1.0 / screenY * 1.0));
-    }
+    }*/
+
     //Add possible values to maptype array. Change if using a maps provider other than MapQuest Open Static Maps.
     maptype = ["map", "sat", "hyb"];
 }
@@ -94,7 +96,9 @@ function Start() {
     initPointerSize = user.localScale.x;
     user.position = Vector3(0, user.position.y, 0);
     //Rotate the camera on Start to avoid showing unwanted scene elements during initialization  (e.g.GUITexts)
-    cam.eulerAngles.x = 270;
+    // Disable project's camera
+    //cam.eulerAngles.x = 270;
+
     //The "ready" variable will be true when the map texture has been successfully loaded.
     ready = false;
 
@@ -335,12 +339,14 @@ function MapPosition() {
 
 //Re-position map and camera using updated data
 function ReSet() {
-    transform.position.x = ((tempLon * 20037508.34 / 180) / 100) - iniRef.x;
+    /*transform.position.x = ((tempLon * 20037508.34 / 180) / 100) - iniRef.x;
     transform.position.z = System.Math.Log(System.Math.Tan((90 + tempLat) * System.Math.PI / 360)) / (System.Math.PI / 180);
-    transform.position.z = ((transform.position.z * 20037508.34 / 180) / 100) - iniRef.z;
-    cam.position.x = ((tempLon * 20037508.34 / 180) / 100) - iniRef.x;
+    transform.position.z = ((transform.position.z * 20037508.34 / 180) / 100) - iniRef.z;*/
+
+    // Disable project's camera
+    /*cam.position.x = ((tempLon * 20037508.34 / 180) / 100) - iniRef.x;
     cam.position.z = System.Math.Log(System.Math.Tan((90 + tempLat) * System.Math.PI / 360)) / (System.Math.PI / 180);
-    cam.position.z = ((cam.position.z * 20037508.34 / 180) / 100) - iniRef.z;
+    cam.position.z = ((cam.position.z * 20037508.34 / 180) / 100) - iniRef.z;*/
 }
 
 
@@ -420,13 +426,17 @@ function ReScale() {
     }
     //2D View 
     else {
-        cam.localEulerAngles = Vector3(90, 0, 0);
+        // Disable project's camera
+        /*cam.localEulerAngles = Vector3(90, 0, 0);
         cam.position.y = (65536 * camDist) / (Mathf.Pow(2, zoom));
-        cam.position.z = user.position.z;
+        cam.position.z = user.position.z;*/
+
         //Correct the camera's near and far clipping distances according to its new height.
         //Introduced to avoid the player and plane not being rendered under some circunstances.
-        mycam.nearClipPlane = cam.position.y / 10;
-        mycam.farClipPlane = cam.position.y + 1;
+        // Disable project's camera
+        //mycam.nearClipPlane = cam.position.y / 10;
+        //mycam.farClipPlane = cam.position.y + 1;
+
         //Small correction to the user's height according to zoom level to avoid similar camera issues.
         user.position.y = 10 * Mathf.Exp(-zoom) + 0.01;
     }
