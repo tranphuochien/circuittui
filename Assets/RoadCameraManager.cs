@@ -27,7 +27,7 @@ public class RoadCameraManager : MonoBehaviour {
     private void OnMouseDown()
     {
         SocketV2 socket = socketController.GetComponent<SocketV2>();
-        socket.SendData("0002:" + URL + "@");
+        socket.SendData(Constant.TOKEN_BEGIN_URL + URL + Constant.TOKEN_END);
     }
 
     // Update is called once per frame
@@ -48,10 +48,10 @@ public class RoadCameraManager : MonoBehaviour {
                 //hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.red;
                 isRaycasting = true;
                 Debug.Log("pang pang");
-                if (socket != null)
+                /*if (socket != null)
                 {
                     socket.SendData("0002:" + URL + "@");
-                }
+                }*/
                 isSent = true;
             }
         } else

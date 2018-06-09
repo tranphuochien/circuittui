@@ -65,7 +65,7 @@ public class DetetorManager : MonoBehaviour
 
                 Vector2 preparedData = new Vector2(CalibrateObject.curPos.x + CalibrateObject.ScreenWorldPosition.x,
                      CalibrateObject.curPos.z + CalibrateObject.ScreenWorldPosition.y);
-                socket.SendData("0001:" + +preparedData.x + "|" + preparedData.y + "@");
+                socket.SendData(Constant.TOKEN_BEGIN_POSITION + preparedData.x + Constant.TOKEN_SPLIT + preparedData.y + Constant.TOKEN_END);
             }
             count++;
             //a = false;
