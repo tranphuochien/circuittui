@@ -23,6 +23,8 @@ public class GenerateChildObject : MonoBehaviour {
     private float deltaX;
     private readonly string CALIBRATE_PLANE = "CalibratePlane";
     private readonly string MENU = BoardManager.MENU_NAME;
+    private const int KINECTX = 512;
+    private const int KINECTY = 424;
 
     // Use this for initialization
     void Start () {
@@ -51,7 +53,8 @@ public class GenerateChildObject : MonoBehaviour {
                     GameObject.Find(CALIBRATE_PLANE).SetActive(false);
                     GameObject.Find(MENU).SetActive(true);
                 }
-                ObjectCenter = new Vector2(SocketClient.xPos, SocketClient.yPos);
+                //ObjectCenter = new Vector2(SocketClient.xPos, SocketClient.yPos);
+                
                 CalculateScale(TopLeftScreen, BottomRightScreen, TopLeftObject, BottomRightObject);
                 if (ObjFollowToken == null)
                 {
@@ -71,6 +74,21 @@ public class GenerateChildObject : MonoBehaviour {
                 
                 Calibrate();
             }
+        } else // test calibrate kinect
+        {
+            if (DetetorManager.points.Count > 4)
+            {
+                ObjectCenter = new Vector2(DetetorManager.points[4].x, DetetorManager.points[4].y);
+                ObjectCenter = CoordinateTransition(ObjectCenter);
+                if (ObjFollowToken == null)
+                {
+                    GenerateChild();
+                }
+                else
+                {
+                    MovePlane();
+                }
+            } 
         }
     }
 
@@ -137,7 +155,8 @@ public class GenerateChildObject : MonoBehaviour {
     private void MovePlane()
     {
         ObjectCenter -= ScreenCenter;
-        Vector3 newPos = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, (y0 - ObjectCenter.y) / deltaY);
+        //Vector3 newPos = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, (y0 - ObjectCenter.y) / deltaY);
+        Vector3 newPos = new Vector3((ObjectCenter.x + 2.5f) / 25, zPlaneChild, (0.5f - ObjectCenter.y) / 19);
         curPos = newPos;
         ObjFollowToken.transform.localPosition = Vector3.Lerp(ObjFollowToken.transform.localPosition, newPos, Time.deltaTime * 5.0f);
     }
@@ -152,7 +171,8 @@ public class GenerateChildObject : MonoBehaviour {
         //ObjFollowToken.transform.SetParent(GameObject.Find("Map").transform);
         ObjectCenter -= ScreenCenter;
         ObjFollowToken.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, -(y0 - ObjectCenter.y) / deltaY);
+        //ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, -(y0 - ObjectCenter.y) / deltaY);
+        ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x + 2.5f) / 25, zPlaneChild, (0.5f - ObjectCenter.y) / 19);
         ObjFollowToken.transform.localScale = new Vector3(VObjectScale.x, 1, VObjectScale.y);
         ObjFollowToken.GetComponent<MeshRenderer>().material = Resources.Load("white 2", typeof(Material)) as Material;
     }
@@ -174,10 +194,17 @@ public class GenerateChildObject : MonoBehaviour {
         return objectCenter;
     }
 
+    private Vector2 CoordinateTransition(Vector2 old)
+    {
+        return new Vector2(old.x, KINECTY - old.y);
+    }
+
     private void GetCoordinateFromDetection()
     {
-        TopLeftScreen = new Vector2(97, 60);
-        BottomRightScreen = new Vector2(595, 400);
+        //TopLeftScreen = new Vector2(97, 60);
+        //BottomRightScreen = new Vector2(595, 400);
+        TopLeftScreen = CoordinateTransition(new Vector2(136, 250));
+        BottomRightScreen = CoordinateTransition(new Vector2(373, 87));
         ScreenCenter = CalculateCenter(TopLeftScreen, BottomRightScreen);
 
         //TopLeftObject = new Vector2(152, 312);

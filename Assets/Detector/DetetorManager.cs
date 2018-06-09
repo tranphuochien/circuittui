@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Windows.Kinect;
 
-public class DetetorManager : MonoBehaviour {
+public class DetetorManager : MonoBehaviour
+{
 
-
- 
     private KeyboardDLL keyboardDLL = KeyboardDLL.getInstance();
+    public static List<Vector2> points = new List<Vector2>();
     List<Vector2> pointsInDepth = new List<Vector2>();
-    
- 
-    List<GameObject> spots = new List<GameObject>();
-
     int countDisapear = 0;
-
-
     private KinectSensor _Sensor;
     private InfraredFrameReader _Reader;
     private ushort[] _Data;
     private byte[] _RawData;
     private byte[] rawByte;
+    public bool a = false;
+    public int delayFrame = 5;
+    int count = 0;
+    SocketV2 socket;
+    private GameObject socketController;
+    uint nPixelsFrame;
 
- 
-    int width, height;
     void Start()
     {
+        socketController = GameObject.Find("SocketController");
+        socket = socketController.GetComponent<SocketV2>();
         _Sensor = KinectSensor.GetDefault();
         if (_Sensor != null)
         {
@@ -33,25 +33,43 @@ public class DetetorManager : MonoBehaviour {
             var frameDesc = _Sensor.InfraredFrameSource.FrameDescription;
             _Data = new ushort[frameDesc.LengthInPixels];
             _RawData = new byte[frameDesc.LengthInPixels * 4];
-            rawByte = new byte[frameDesc.LengthInPixels];
-            width = frameDesc.Width;
-            height = frameDesc.Height;
-            Debug.Log(width + "  " + height);
-            //Global.InfraredSize = new Vector2(frameDesc.Width, frameDesc.Height);
-            //Debug.Log("Size " + _Data.Length);
+            nPixelsFrame = frameDesc.LengthInPixels;
+            Constant.KINECT_IR_WIDTH = frameDesc.Width;
+            Constant.KINECT_IR_HEIGHT = frameDesc.Height;
+            Debug.Log("Width: " + Constant.KINECT_IR_WIDTH + " Height: " + Constant.KINECT_IR_HEIGHT + " " + frameDesc.LengthInPixels);
 
             if (!_Sensor.IsOpen)
             {
                 Debug.Log("Kinect is opened");
                 _Sensor.Open();
             }
+            rawByte = new byte[Constant.FEED_DETECTOR_WIDTH * Constant.FEED_DETECTOR_HEIGHT];
         }
     }
 
-    // Update is called once per frame
+    public static Vector2 GetPointCenter()
+    {
+        if (points.Count > 4)
+        {
+            return new Vector2(points[4].x, points[4].y);
+        }
+        return new Vector2(0, 0);
+    }
+
     unsafe void Update()
     {
+        if (a)
+        {
+            if (count % delayFrame == 0)
+            {
 
+                Vector2 preparedData = new Vector2(CalibrateObject.curPos.x + CalibrateObject.ScreenWorldPosition.x,
+                     CalibrateObject.curPos.z + CalibrateObject.ScreenWorldPosition.y);
+                socket.SendData("0001:" + +preparedData.x + "|" + preparedData.y + "@");
+            }
+            count++;
+            //a = false;
+        }
         if (_Reader != null)
         {
             var frame = _Reader.AcquireLatestFrame();
@@ -60,35 +78,37 @@ public class DetetorManager : MonoBehaviour {
                 frame.CopyFrameDataToArray(_Data);
 
                 int index = 0;
-                int index2 = 0;
+                bool isInRangeX, isInRangeY;
+                byte intensity;
+                int count = 0;
                 foreach (var ir in _Data)
                 {
-                    byte intensity = (byte)(ir >> 8);
-                    _RawData[index++] = intensity;
-                    _RawData[index++] = intensity;
-                    _RawData[index++] = intensity;
-                    _RawData[index++] = 255; // Alpha
-                    rawByte[index2++] = intensity;
+                    count++;
+                    intensity = (byte)(ir >> 8);
+                    isInRangeX = (count % Constant.KINECT_IR_WIDTH >= Constant.LEFT_X_FEED_DETECTOR &&
+                        count % Constant.KINECT_IR_WIDTH < Constant.RIGHT_X_FEED_DETECTOR);
+                    isInRangeY = count / Constant.KINECT_IR_WIDTH >= Constant.TOP_Y_FEED_DETECTOR &&
+                        count / Constant.KINECT_IR_WIDTH < Constant.BOTTOM_Y_FEED_DETECTOR;
+
+                    if (isInRangeX && isInRangeY)
+                    {
+                        rawByte[index++] = intensity;
+                    }
                 }
+
+
                 fixed (byte* data = rawByte)
                 {
                     //process
-                    keyboardDLL.feedData(data, width, height);
+                    keyboardDLL.feedData(data, Constant.FEED_DETECTOR_WIDTH, Constant.FEED_DETECTOR_HEIGHT);
                 }
 
                 if (keyboardDLL.isKeyboardIn())   //has keyboard
                 {
                     //keyboard is in, do something, control the yellow box
-                    List<Vector2> points = keyboardDLL.getKeyboardPos();
-                   
+                    points = keyboardDLL.getKeyboardPos();
 
-                    Vector2 center = points[4];
-                    Debug.Log(center.x + "  " + center.y);
-
-                    float angle = keyboardDLL.getAngle();
-
-
-
+                    //float angle = keyboardDLL.getAngle();
                     countDisapear = 0;
                 }
 
@@ -96,10 +116,5 @@ public class DetetorManager : MonoBehaviour {
                 frame = null;
             }
         }
-
-
-
-
-       
     }
 }
