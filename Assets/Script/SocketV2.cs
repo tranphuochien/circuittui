@@ -17,13 +17,13 @@ public class SocketT2h
     }
 }
 
-
 public class SocketV2 : MonoBehaviour {
     private byte[] _buffer = new byte[1024];
     public List<SocketT2h> __ClientSockets { get; set; }
     List<string> _names = new List<string>();
     private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     private Socket connectedSocket;
+    public DetetorManager detetorManager;
 
     // Use this for initialization
     void Start () {
@@ -82,25 +82,13 @@ public class SocketV2 : MonoBehaviour {
                 string text = Encoding.ASCII.GetString(dataBuf);
              
                 string reponse = string.Empty;
-                //if (text.Contains("@@"))
-                //{
-                //    for (int i = 0; i < list_Client.Items.Count; i++)
-                //    {
-                //        if (socket.RemoteEndPoint.ToString().Equals(__ClientSockets[i]._Socket.RemoteEndPoint.ToString()))
-                //        {
-                //            list_Client.Items.RemoveAt(i);
-                //            list_Client.Items.Insert(i, text.Substring(1, text.Length - 1));
-                //            __ClientSockets[i]._Name = text;
-                //            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
-                //            return;
-                //        }
-                //    }
-                //}
+          
 
                 for (int i = 0; i < __ClientSockets.Count; i++)
                 {
                     if (socket.RemoteEndPoint.ToString().Equals(__ClientSockets[i]._Socket.RemoteEndPoint.ToString()))
                     {
+                        ProcessMessage(text);
                         Debug.Log("\n" + __ClientSockets[i]._Name + ": " + text);
                     }
                 }
@@ -108,7 +96,7 @@ public class SocketV2 : MonoBehaviour {
                 {
                     return;
                 }
-                reponse = "server da nhan" + text;
+                //reponse = "server da nhan" + text;
                 Sendata(socket, reponse);
             }
             else
@@ -118,6 +106,7 @@ public class SocketV2 : MonoBehaviour {
                     if (__ClientSockets[i]._Socket.RemoteEndPoint.ToString().Equals(socket.RemoteEndPoint.ToString()))
                     {
                         __ClientSockets.RemoveAt(i);
+                        connectedSocket = null;
                         //lb_soluong.Text = "Số client đang kết nối: " + __ClientSockets.Count.ToString();
                     }
                 }
@@ -126,8 +115,31 @@ public class SocketV2 : MonoBehaviour {
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
     }
 
+    private void ProcessMessage(string text)
+    {
+        switch(text)
+        {
+            case Constant.TOKEN_BEGIN_SHAKE:
+                detetorManager.shouldSendPosition = true;
+                break;
+            case Constant.TOKEN_BEGIN_FREEZE:
+                detetorManager.shouldSendPosition = true;
+                break;
+
+        }
+        if (text == Constant.TOKEN_BEGIN_SHAKE)
+        {
+           
+            return;
+        }
+    }
+
     public void Sendata(Socket socket, string noidung)
     {
+        if (!socket.Connected)
+        {
+            return;
+        }
         byte[] data = Encoding.ASCII.GetBytes(noidung);
         socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
         _serverSocket.BeginAccept(new AsyncCallback(AppceptCallback), null);
@@ -135,6 +147,10 @@ public class SocketV2 : MonoBehaviour {
 
     public void SendData(string noidung)
     {
+        if (connectedSocket == null)
+        {
+            return;
+        }
         byte[] data = Encoding.ASCII.GetBytes(noidung);
         connectedSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), connectedSocket);
         _serverSocket.BeginAccept(new AsyncCallback(AppceptCallback), null);
