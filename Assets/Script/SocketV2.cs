@@ -123,7 +123,7 @@ public class SocketV2 : MonoBehaviour {
                 detetorManager.shouldSendPosition = true;
                 break;
             case Constant.TOKEN_BEGIN_FREEZE:
-                detetorManager.shouldSendPosition = true;
+                detetorManager.shouldSendPosition = false;
                 break;
 
         }
