@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoadCameraManager : MonoBehaviour {
+public class RoadCameraManager : MonoBehaviour
+{
 
     public string URL;
     public static bool beginRayCasting = false;
@@ -14,11 +15,13 @@ public class RoadCameraManager : MonoBehaviour {
     public Vector3 directionZ = new Vector3(0, 0, 100);
     private GameObject screenObject;
     private readonly string TAG = "road_camera";
-    private bool isRaycasting = false;
-    private bool isSent = false;
+    private static bool isRaycasting = false;
+    private static bool isSent = false;
+    private readonly object lock_ = new object();
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         socketController = GameObject.Find("SocketController");
         socket = socketController.GetComponent<SocketV2>();
         screenObject = GameObject.Find("Screen");
@@ -31,7 +34,8 @@ public class RoadCameraManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         if (!beginRayCasting)
         {
             return;
@@ -40,28 +44,33 @@ public class RoadCameraManager : MonoBehaviour {
 
         Vector3 test = new Vector3(CalibrateObject.curPos.x + screenObject.transform.position.x, CalibrateObject.curPos.z + screenObject.transform.position.y, z);
         Debug.DrawRay(test, directionZ, Color.green);
-       
-        if (Physics.Raycast(test, Vector3.forward, out hit))
-        {
-            if (hit.collider.gameObject.tag == TAG && !isSent)
-            {
-                //hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.red;
-                isRaycasting = true;
-                /*Debug.Log("pang pang");
-                if (socket != null)
-                {
-                    socket.SendData("0002:" + URL + "@");
-                }*/
-                isSent = true;
-            }
-        } else
-        {
-            isRaycasting = false;
-        }
 
-        if (!isRaycasting)
+        lock (lock_)
         {
-            isSent = false;
+
+            if (Physics.Raycast(test, Vector3.forward, out hit))
+            {
+                if (hit.collider.gameObject.tag == TAG && !isSent)
+                {
+                    //hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.red;
+                    isRaycasting = true;
+                    isSent = true;
+                    if (socket != null)
+                    {
+                        Debug.Log("pang pang:: " + isSent);
+                        socket.SendData(Constant.TOKEN_BEGIN_URL + URL + Constant.TOKEN_END);
+                    }
+                }
+                else
+                {
+                    isRaycasting = false;
+                }
+
+            }
+            if (!isRaycasting)
+            {
+                isSent = false;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Windows.Kinect;
 
 public class DetetorManager : MonoBehaviour
@@ -15,8 +16,8 @@ public class DetetorManager : MonoBehaviour
     private ushort[] _Data;
     private byte[] _RawData;
     private byte[] rawByte;
-    public bool a = false;
-    public int delayFrame = 5;
+    public bool shouldSendPosition = false;
+    public int delayFrame = 15;
     int count = 0;
     SocketV2 socket;
     private GameObject socketController;
@@ -56,9 +57,21 @@ public class DetetorManager : MonoBehaviour
         return new Vector2(0, 0);
     }
 
+    public void TriggerSendDataBtn()
+    {
+        shouldSendPosition = !shouldSendPosition;
+        if (shouldSendPosition)
+        {
+            GameObject.Find("SendDataBtn").GetComponentInChildren<Text>().text = "Stop send data";
+        } else
+        {
+            GameObject.Find("SendDataBtn").GetComponentInChildren<Text>().text = "Send data";
+        }
+    }
+
     unsafe void Update()
     {
-        if (a)
+        if (shouldSendPosition)
         {
             if (count % delayFrame == 0)
             {
@@ -68,7 +81,6 @@ public class DetetorManager : MonoBehaviour
                 socket.SendData(Constant.TOKEN_BEGIN_POSITION + preparedData.x + Constant.TOKEN_SPLIT + preparedData.y + Constant.TOKEN_END);
             }
             count++;
-            //a = false;
         }
         if (_Reader != null)
         {

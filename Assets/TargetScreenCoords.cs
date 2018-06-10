@@ -1,29 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vuforia;
 
+
+
+//COMMENT FOR BUILD RELEASE, VUFORIA NOT SUPPORT
 public class TargetScreenCoords : MonoBehaviour {
 
-    private ImageTargetBehaviour mImageTargetBehaviour = null;
+    //private ImageTargetBehaviour mImageTargetBehaviour = null;
 
     // Use this for initialization
     void Start()
     {
         // We retrieve the ImageTargetBehaviour component
         // Note: This only works if this script is attached to an ImageTarget
-        mImageTargetBehaviour = GetComponent<ImageTargetBehaviour>();
+        /*mImageTargetBehaviour = GetComponent<ImageTargetBehaviour>();
 
         if (mImageTargetBehaviour == null)
         {
             Debug.Log("ImageTargetBehaviour not found ");
-        }
+        }*/
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (mImageTargetBehaviour == null)
+        /*if (mImageTargetBehaviour == null)
         {
             Debug.Log("ImageTargetBehaviour not found");
             return;
@@ -53,6 +55,7 @@ public class TargetScreenCoords : MonoBehaviour {
         plane.transform.localRotation = Quaternion.Euler(-90, 0, 0);
         plane.transform.localScale = new Vector3(0.05f, 1, 0.05f);
         plane.GetComponent<MeshRenderer>().material = Resources.Load("white 2", typeof(Material)) as Material;
+        */
 
     }
 }

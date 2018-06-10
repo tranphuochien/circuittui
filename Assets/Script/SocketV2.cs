@@ -104,9 +104,6 @@ public class SocketV2 : MonoBehaviour {
                         Debug.Log("\n" + __ClientSockets[i]._Name + ": " + text);
                     }
                 }
-
-
-
                 if (text == "bye")
                 {
                     return;
