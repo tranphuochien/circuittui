@@ -47,8 +47,8 @@ public class RoadCameraManager : MonoBehaviour {
             {
                 //hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.red;
                 isRaycasting = true;
-                Debug.Log("pang pang");
-                /*if (socket != null)
+                /*Debug.Log("pang pang");
+                if (socket != null)
                 {
                     socket.SendData("0002:" + URL + "@");
                 }*/

@@ -107,8 +107,9 @@ public class DetetorManager : MonoBehaviour
                 {
                     //keyboard is in, do something, control the yellow box
                     points = keyboardDLL.getKeyboardPos();
-
-                    //float angle = keyboardDLL.getAngle();
+                    
+                    float angle = keyboardDLL.getAngle();
+                    //Debug.Log(angle);
                     countDisapear = 0;
                 }
 

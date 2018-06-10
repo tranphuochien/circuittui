@@ -63,8 +63,9 @@ public class KeyboardDLL
     {
         List<Vector2> res = new List<Vector2>();
         float* tmp = getKeyboardPos(helper);
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
             res.Add(new Vector2(tmp[i * 2], tmp[i * 2 + 1]));
+        //Debug.Log(res[4].ToString() + "  " + res[9].ToString());
         return res;
     }
 
@@ -93,6 +94,7 @@ public class KeyboardDLL
         if (pos[0] == 0)
             return new Vector2(-1001, -1001);
         float z = pos[3];
+        Debug.Log(pos[3] + "   " + pos[4]);
         return new Vector2(pos[1], pos[2]);
     }
 

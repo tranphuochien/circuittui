@@ -15,6 +15,7 @@ public class CalibrateObject : MonoBehaviour
     private Vector2 ObjectCenter;
     private GameObject ObjFollowToken;
     private GameObject BackgroundCalibrate;
+    private GameObject CrossMap;
     public static Vector3 ScreenWorldPosition;
     private static bool isCalibrated = false;
     public bool ShouldReadConfig = false;
@@ -31,9 +32,12 @@ public class CalibrateObject : MonoBehaviour
     void Start()
     {
         BackgroundCalibrate = GameObject.Find("Plane");
+        CrossMap = GameObject.Find("Cross");
+        CalibratePlane = GameObject.Find(CALIBRATE_PLANE);
         ScreenWorldPosition = this.transform.position;
         GetCoordinateFromDetection();
-        CalibratePlane = GameObject.Find(CALIBRATE_PLANE);
+
+        CrossMap.SetActive(false);
     }
 
     // Update is called once per frame
@@ -92,6 +96,7 @@ public class CalibrateObject : MonoBehaviour
         {
             ReadCalibrateConfig();
             BackgroundCalibrate.SetActive(false);
+            CalibratePlane.SetActive(false);
             isCalibrated = true;
             return;
         }
@@ -182,13 +187,14 @@ public class CalibrateObject : MonoBehaviour
 
         //Vector3 newPos = new Vector3((ObjectCenter.x + -3.5186307430267336f) / 4.503023147583008f, zPlaneChild, (2.2618608474731447f - ObjectCenter.y) / 4.2054057121276859f);
         curPos = newPos;
-        ObjFollowToken.transform.localPosition = Vector3.Lerp(ObjFollowToken.transform.localPosition, newPos, Time.deltaTime * 5.0f);
+        ObjFollowToken.transform.localPosition = Vector3.Lerp(ObjFollowToken.transform.localPosition, newPos, Time.deltaTime * 7.0f);
     }
 
     float zPlaneChild = 0f;
 
     private void GenerateChild()
     {
+        CrossMap.SetActive(true);
         ObjFollowToken = GameObject.CreatePrimitive(PrimitiveType.Plane);
         ObjFollowToken.transform.name = "TrackingPlane";
         ObjFollowToken.transform.SetParent(this.gameObject.transform);
@@ -198,6 +204,8 @@ public class CalibrateObject : MonoBehaviour
         ObjFollowToken.transform.localPosition = new Vector3((ObjectCenter.x - x0) / deltaX, zPlaneChild, -(y0 - ObjectCenter.y) / deltaY);
         ObjFollowToken.transform.localScale = new Vector3(0.2f, 1, 0.2f);
         ObjFollowToken.GetComponent<MeshRenderer>().material = Resources.Load("white 2", typeof(Material)) as Material;
+        CrossMap.transform.parent = ObjFollowToken.transform;
+        CrossMap.transform.localPosition = new Vector3();
     }
 
     private Vector2 CalculateCenter(Vector2 topLeftObject, Vector2 bottomRightObject)
