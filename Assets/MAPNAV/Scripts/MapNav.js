@@ -501,6 +501,17 @@ function Update() {
     }
 }
 
+public function ChangeMapType() {
+    if (mapping == false) {
+        if (index < maptype.Length - 1)
+            index = index + 1;
+        else
+            index = 0;
+        MapPosition();
+        ReScale();
+    }
+}
+
 
 //SAMPLE USER INTERFACE. MODIFY OR EXTEND IF NECESSARY.
 function OnGUI() {

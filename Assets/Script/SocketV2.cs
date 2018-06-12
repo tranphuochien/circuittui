@@ -23,7 +23,6 @@ public class SocketV2 : MonoBehaviour {
     List<string> _names = new List<string>();
     private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     private Socket connectedSocket;
-    public DetetorManager detetorManager;
 
     // Use this for initialization
     void Start () {
@@ -88,7 +87,7 @@ public class SocketV2 : MonoBehaviour {
                 {
                     if (socket.RemoteEndPoint.ToString().Equals(__ClientSockets[i]._Socket.RemoteEndPoint.ToString()))
                     {
-                        ProcessMessage(text);
+                        ProcessMessage.processMessage(text);
                         Debug.Log("\n" + __ClientSockets[i]._Name + ": " + text);
                     }
                 }
@@ -113,25 +112,6 @@ public class SocketV2 : MonoBehaviour {
             }
         }
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
-    }
-
-    private void ProcessMessage(string text)
-    {
-        switch(text)
-        {
-            case Constant.TOKEN_BEGIN_SHAKE:
-                detetorManager.shouldSendPosition = true;
-                break;
-            case Constant.TOKEN_BEGIN_FREEZE:
-                detetorManager.shouldSendPosition = false;
-                break;
-
-        }
-        if (text == Constant.TOKEN_BEGIN_SHAKE)
-        {
-           
-            return;
-        }
     }
 
     public void Sendata(Socket socket, string noidung)
