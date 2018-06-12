@@ -60,15 +60,10 @@ public class ProcessMessage : MonoBehaviour {
         return val; 
     }
 
-    private void Update()
-    {
-        changeMapType();
-    }
-
     private static void changeMapType()
     {
         Debug.Log("Changemaptype");
         GameObject map = GameObject.Find("Map");
-        map.SendMessage("changeMapType");
+        map.SendMessage("ChangeMapType");
     }
 }
