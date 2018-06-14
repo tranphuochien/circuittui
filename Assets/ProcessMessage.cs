@@ -2,17 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProcessMessage : MonoBehaviour {
 
+    private static GameObject socketController;
+    static SocketV2 socket;
     public static  DetetorManager detetorManager;
     public static float DefaultFOV = -1;
     static int currentImageNumber = -1;
-    List<Texture> TextureList = new List<Texture>();
+    static List<Texture> TextureList = new List<Texture>();
     string[] FileNameList = { "boku_no_hero", "gintama", "kuroko", "nanatsu_taizai", "one_punch_man" };
 
     void Start()
     {
+        socketController = GameObject.Find("SocketController");
+        socket = socketController.GetComponent<SocketV2>();
         LoadTexture();
     }
 
@@ -40,8 +45,7 @@ public class ProcessMessage : MonoBehaviour {
                 detetorManager.shouldSendPosition = false;
                 break;
             case Constant.TOKEN_BEGIN_FLIP:
-                UnityMainThreadDispatcher.Instance().Enqueue(ThisWillBeExecutedOnTheMainThread());
-                //changeMapType();
+                UnityMainThreadDispatcher.Instance().Enqueue(changeMapType());
                 break;
             case Constant.TOKEN_BEGIN_ZOOM:
                 if (DefaultFOV < 0)
@@ -60,9 +64,10 @@ public class ProcessMessage : MonoBehaviour {
                 break;
             case Constant.TOKEN_BEGIN_DROP:
                 currentImageNumber = GetCurrentImageFromMsg(msgContent[0]);
-                DisplayImage();
+                UnityMainThreadDispatcher.Instance().Enqueue(DisplayImage());
                 break;
             case Constant.TOKEN_BEGIN_GET:
+                SendMessageToClient();
                 break;
         }
         if (msgCode == Constant.TOKEN_BEGIN_SHAKE)
@@ -72,9 +77,16 @@ public class ProcessMessage : MonoBehaviour {
         }
     }
 
-    private static void DisplayImage()
+    private static void SendMessageToClient()
     {
-        throw new NotImplementedException();
+        socket.SendDataAll(Constant.TOKEN_BEGIN_GET + ":" + currentImageNumber + Constant.TOKEN_END);
+    }
+
+    private static IEnumerator DisplayImage()
+    {
+        Debug.Log("Display Image");
+        GameObject.Find("ImageContent").GetComponent<RawImage>().texture = TextureList[currentImageNumber]; ;
+        yield return null;
     }
 
     private static int GetCurrentImageFromMsg(string v)
@@ -95,17 +107,11 @@ public class ProcessMessage : MonoBehaviour {
         return val; 
     }
 
-    private static void changeMapType()
+    public static IEnumerator changeMapType()
     {
         Debug.Log("Changemaptype");
         GameObject map = GameObject.Find("Map");
         map.SendMessage("ChangeMapType");
-    }
-
-    public static IEnumerator ThisWillBeExecutedOnTheMainThread()
-    {
-        Debug.Log("This is executed from the main thread");
-        changeMapType();
         yield return null;
     }
 }

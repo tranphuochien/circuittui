@@ -116,6 +116,20 @@ public class SocketV2 : MonoBehaviour {
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
     }
     public DetetorManager detetorManager;
+
+    public void SendDataAll(string noidung)
+    {
+        if (connectedSocket == null || !connectedSocket.Connected)
+        {
+            return;
+        }
+        for (int i = 0; i < __ClientSockets.Count; i++)
+        {
+            SendData(noidung);
+        }
+    }
+
+
     public void Sendata(Socket socket, string noidung)
     {
         if (!socket.Connected)
