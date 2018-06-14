@@ -24,7 +24,8 @@ public class ProcessMessage : MonoBehaviour {
                 detetorManager.shouldSendPosition = false;
                 break;
             case Constant.TOKEN_BEGIN_FLIP:
-                changeMapType();
+                UnityMainThreadDispatcher.Instance().Enqueue(ThisWillBeExecutedOnTheMainThread());
+                //changeMapType();
                 break;
             case Constant.TOKEN_BEGIN_ZOOM:
                 if (DefaultFOV < 0)
@@ -66,5 +67,12 @@ public class ProcessMessage : MonoBehaviour {
         Debug.Log("Changemaptype");
         GameObject map = GameObject.Find("Map");
         map.SendMessage("ChangeMapType");
+    }
+
+    public static IEnumerator ThisWillBeExecutedOnTheMainThread()
+    {
+        Debug.Log("This is executed from the main thread");
+        changeMapType();
+        yield return null;
     }
 }
