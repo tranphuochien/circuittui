@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class ProcessMessage : MonoBehaviour {
 
-    public static DetetorManager detetorManager;
+    public static  DetetorManager detetorManager;
     public static float DefaultFOV = -1;
 
     public static void processMessage(string msg)
     {
+
         string[] msgContent = msg.Split(Constant.TOKEN_END.ToCharArray());
 
         string msgCode = msgContent[0].Substring(0, 4);

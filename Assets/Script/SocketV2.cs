@@ -14,6 +14,7 @@ public class SocketT2h
     public SocketT2h(Socket socket)
     {
         this._Socket = socket;
+        this._Name = socket.RemoteEndPoint.ToString();
     }
 }
 
@@ -27,6 +28,7 @@ public class SocketV2 : MonoBehaviour {
     // Use this for initialization
     void Start () {
         __ClientSockets = new List<SocketT2h>();
+        ProcessMessage.detetorManager = detetorManager;
         SetupServer();
     }
 
@@ -113,7 +115,7 @@ public class SocketV2 : MonoBehaviour {
         }
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
     }
-
+    public DetetorManager detetorManager;
     public void Sendata(Socket socket, string noidung)
     {
         if (!socket.Connected)
