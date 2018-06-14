@@ -27,6 +27,8 @@
     public const string TOKEN_BEGIN_FLIP = "0005";
     public const string TOKEN_BEGIN_ZOOM = "0006";
     public const string TOKEN_BEGIN_ZOOMDEFAULT = "0007";
+    public const string TOKEN_BEGIN_DROP = "0008";
+    public const string TOKEN_BEGIN_GET = "0009";
     public readonly static string TOKEN_SPLIT = "|";
     public readonly static string TOKEN_END = "@";
 

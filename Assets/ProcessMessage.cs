@@ -7,6 +7,22 @@ public class ProcessMessage : MonoBehaviour {
 
     public static DetetorManager detetorManager;
     public static float DefaultFOV = -1;
+    static int currentImageNumber = -1;
+    List<Texture> TextureList = new List<Texture>();
+    string[] FileNameList = { "boku_no_hero", "gintama", "kuroko", "nanatsu_taizai", "one_punch_man" };
+
+    void Start()
+    {
+        LoadTexture();
+    }
+
+    private void LoadTexture()
+    {
+        for (int i = 0; i < FileNameList.Length; i++)
+        {
+            TextureList.Add(Resources.Load(FileNameList[i]) as Texture);
+        }
+    }
 
     public static void processMessage(string msg)
     {
@@ -40,12 +56,29 @@ public class ProcessMessage : MonoBehaviour {
                     zoomMap(DefaultFOV);
                 }
                 break;
+            case Constant.TOKEN_BEGIN_DROP:
+                currentImageNumber = GetCurrentImageFromMsg(msgContent[0]);
+                DisplayImage();
+                break;
+            case Constant.TOKEN_BEGIN_GET:
+                break;
         }
         if (msgCode == Constant.TOKEN_BEGIN_SHAKE)
         {
 
             return;
         }
+    }
+
+    private static void DisplayImage()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static int GetCurrentImageFromMsg(string v)
+    {
+        int val = int.Parse(v.Substring(5, v.Length - 5));
+        return val;
     }
 
     private static void zoomMap(float DestFov)
