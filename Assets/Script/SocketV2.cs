@@ -29,6 +29,7 @@ public class SocketV2 : MonoBehaviour {
     void Start () {
         __ClientSockets = new List<SocketT2h>();
         ProcessMessage.detetorManager = detetorManager;
+        ProcessMessage.flagController = flagController;
         SetupServer();
     }
 
@@ -116,6 +117,7 @@ public class SocketV2 : MonoBehaviour {
         socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
     }
     public DetetorManager detetorManager;
+    public FlagController flagController;
 
     public void SendDataAll(string noidung)
     {

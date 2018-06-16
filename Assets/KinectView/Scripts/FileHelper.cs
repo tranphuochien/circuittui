@@ -29,4 +29,18 @@ public static class FileHelper
         Debug.Log("Finish write " + name);
         isRenamed = false;
     }
+
+    public static void WritePNGPicture(byte[] data, string nameFile)
+    {
+        MemoryStream ms = new MemoryStream(data);
+        Image image = Image.FromStream(ms);
+        String name;
+
+
+        //String timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+        name = nameFile;
+
+        image.Save(name);
+        Debug.Log("Finish write " + name);
+    }
 }

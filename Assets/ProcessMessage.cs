@@ -8,7 +8,8 @@ public class ProcessMessage : MonoBehaviour {
 
     private static GameObject socketController;
     static SocketV2 socket;
-    public static  DetetorManager detetorManager;
+    public static DetetorManager detetorManager;
+    public static FlagController flagController;
     public static float DefaultFOV = -1;
     static int currentImageNumber = -1;
     static List<Texture> TextureList = new List<Texture>();
@@ -65,6 +66,11 @@ public class ProcessMessage : MonoBehaviour {
             case Constant.TOKEN_BEGIN_DROP:
                 currentImageNumber = GetCurrentImageFromMsg(msgContent[0]);
                 UnityMainThreadDispatcher.Instance().Enqueue(DisplayImage());
+                break;
+            case Constant.TOKEN_BEGIN_SET_FLAG:
+                flagController.AddFlag(CalibrateObject.curPos);
+                break;
+            case Constant.TOKEN_BEGIN_ANALYZE:
                 break;
             case Constant.TOKEN_BEGIN_GET:
                 SendMessageToClient();
