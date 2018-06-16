@@ -12,6 +12,7 @@ public class ProcessMessage : MonoBehaviour {
     public static FlagController flagController;
     public static float DefaultFOV = -1;
     static int currentImageNumber = -1;
+    static string currentMsg = "";
     static List<Texture> TextureList = new List<Texture>();
     string[] FileNameList = { "boku_no_hero", "gintama", "kuroko", "nanatsu_taizai", "one_punch_man" };
 
@@ -65,6 +66,7 @@ public class ProcessMessage : MonoBehaviour {
                 break;
             case Constant.TOKEN_BEGIN_DROP:
                 currentImageNumber = GetCurrentImageFromMsg(msgContent[0]);
+                currentMsg = GetCurrentImageMessage(msgContent[0]);
                 UnityMainThreadDispatcher.Instance().Enqueue(DisplayImage());
                 break;
             case Constant.TOKEN_BEGIN_SET_FLAG:
@@ -91,13 +93,20 @@ public class ProcessMessage : MonoBehaviour {
     private static IEnumerator DisplayImage()
     {
         Debug.Log("Display Image");
-        GameObject.Find("ImageContent").GetComponent<RawImage>().texture = TextureList[currentImageNumber]; ;
+        GameObject.Find("ImageContent").GetComponent<RawImage>().texture = TextureList[currentImageNumber];
+        GameObject.Find("Message").GetComponent<InputField>().text = currentMsg;
         yield return null;
     }
 
     private static int GetCurrentImageFromMsg(string v)
     {
-        int val = int.Parse(v.Substring(5, v.Length - 5));
+        int val = int.Parse(v.Substring(5, v.Length - 5).Split('|')[0]);
+        return val;
+    }
+
+    private static string GetCurrentImageMessage(string v)
+    {
+        string val = v.Substring(5, v.Length - 5).Split('|')[1];
         return val;
     }
 
