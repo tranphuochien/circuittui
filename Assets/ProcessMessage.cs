@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProcessMessage : MonoBehaviour {
+public class ProcessMessage : MonoBehaviour
+{
 
     private static GameObject socketController;
     static SocketV2 socket;
@@ -73,6 +74,9 @@ public class ProcessMessage : MonoBehaviour {
                 flagController.AddFlag(CalibrateObject.curPos);
                 break;
             case Constant.TOKEN_BEGIN_ANALYZE:
+                UnityMainThreadDispatcher.Instance().Enqueue(Statistic());
+                break;
+            case Constant.TOKEN_BEGIN_CLEAR_FLAG:
                 break;
             case Constant.TOKEN_BEGIN_GET:
                 SendMessageToClient();
@@ -98,6 +102,12 @@ public class ProcessMessage : MonoBehaviour {
         yield return null;
     }
 
+    private static IEnumerator Statistic()
+    {
+        flagController.StatisticBtnTrigger();
+        yield return null;
+    }
+
     private static int GetCurrentImageFromMsg(string v)
     {
         int val = int.Parse(v.Substring(5, v.Length - 5).Split('|')[0]);
@@ -119,7 +129,7 @@ public class ProcessMessage : MonoBehaviour {
     private static float getZoomValFromMsg(string content)
     {
         float val = float.Parse(content.Substring(5, content.Length - 5));
-        return val; 
+        return val;
     }
 
     public static IEnumerator changeMapType()
