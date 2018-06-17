@@ -11,12 +11,13 @@ public class FlagController : MonoBehaviour
     Text StatistictBtn;
     bool shouldShowColumn;
 
-    List<Vector3> listFlags = new List<Vector3>();
+    List<Vector3> listPositionFlags = new List<Vector3>();
+    List<GameObject> listFlags = new List<GameObject>();
     List<GameObject> listColumns = new List<GameObject>();
 
     public void AddFlag(Vector3 position)
     {
-        listFlags.Add(new Vector3(position.x, position.z, 0));
+        listPositionFlags.Add(new Vector3(position.x, position.z, 0));
     }
     // Use this for initialization
     void Start()
@@ -34,20 +35,20 @@ public class FlagController : MonoBehaviour
     void Update()
     {
 
-        for (int i = 0; i < listFlags.Count; i++)
+        for (int i = 0; i < listPositionFlags.Count; i++)
         {
             //Already set flag
-            if (listFlags[i].z == 1)
+            if (listPositionFlags[i].z == 1)
             {
                 continue;
             }
-            listFlags[i] = new Vector3(listFlags[i].x, listFlags[i].y, 1);
+            listPositionFlags[i] = new Vector3(listPositionFlags[i].x, listPositionFlags[i].y, 1);
             GameObject newFlag = cloneFlag();
-
-            newFlag.transform.localPosition = new Vector3(listFlags[i].x, 0, listFlags[i].y);
+            newFlag.transform.localPosition = new Vector3(listPositionFlags[i].x, 0, listPositionFlags[i].y);
+            listFlags.Add(newFlag);
 
             GameObject newColumn = cloneColumn();
-            newColumn.transform.localPosition = new Vector3(listFlags[i].x, 0, listFlags[i].y);
+            newColumn.transform.localPosition = new Vector3(listPositionFlags[i].x, 0, listPositionFlags[i].y);
             listColumns.Add(newColumn);
         }
     }
@@ -59,6 +60,22 @@ public class FlagController : MonoBehaviour
             listColumns[i].GetComponent<ColumnController>().height = Random.Range(0.05f, 0.5f);
             listColumns[i].GetComponent<ColumnController>().trigger = true;
         }
+    }
+
+    public void ClearFlags()
+    {
+        listPositionFlags.Clear();
+        foreach (GameObject obj in listFlags)
+        {
+            GameObject.Destroy(obj);
+        }
+        listFlags.Clear();
+
+        foreach (GameObject obj in listColumns)
+        {
+            GameObject.Destroy(obj);
+        }
+        listColumns.Clear();
     }
 
     public void hideColumn()

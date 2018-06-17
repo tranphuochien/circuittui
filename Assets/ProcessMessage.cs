@@ -77,6 +77,7 @@ public class ProcessMessage : MonoBehaviour
                 UnityMainThreadDispatcher.Instance().Enqueue(Statistic());
                 break;
             case Constant.TOKEN_BEGIN_CLEAR_FLAG:
+                UnityMainThreadDispatcher.Instance().Enqueue(ClearFlags());
                 break;
             case Constant.TOKEN_BEGIN_GET:
                 SendMessageToClient();
@@ -105,6 +106,12 @@ public class ProcessMessage : MonoBehaviour
     private static IEnumerator Statistic()
     {
         flagController.StatisticBtnTrigger();
+        yield return null;
+    }
+
+    private static IEnumerator ClearFlags()
+    {
+        flagController.ClearFlags();
         yield return null;
     }
 
