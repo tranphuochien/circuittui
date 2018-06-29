@@ -15,7 +15,7 @@ public class ProcessMessage : MonoBehaviour
     static int currentImageNumber = -1;
     static string currentMsg = "";
     static List<Texture> TextureList = new List<Texture>();
-    string[] FileNameList = { "boku_no_hero", "gintama", "kuroko", "nanatsu_taizai", "one_punch_man" };
+    string[] FileNameList = { "hcmus2", "nha_i", "nhadieuhanh", "nguoi-hoc" };
 
     void Start()
     {
