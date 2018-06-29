@@ -15,10 +15,10 @@
     public readonly static int BOTTOM_Y_FEED_DETECTOR = 360;
 
     //Depend on image feed detector, if size feed detector changing --> must measure screen projector
-    public readonly static int TOPLEFT_X_SCREEN_PROJECTOR = 123;
+    public readonly static int TOPLEFT_X_SCREEN_PROJECTOR = 99;
     public readonly static int TOPLEFT_Y_SCREEN_PROJECTOR = 279;
-    public readonly static int RIGHTBOTTOM_X_SCREEN_PROJECTOR = 384;
-    public readonly static int RIGHTBOTTOM_Y_SCREEN_PROJECTOR = 72;
+    public readonly static int RIGHTBOTTOM_X_SCREEN_PROJECTOR = 383;
+    public readonly static int RIGHTBOTTOM_Y_SCREEN_PROJECTOR = 73;
 
     public readonly static string TOKEN_BEGIN_POSITION = "0001:";
     public readonly static string TOKEN_BEGIN_URL = "0002:";
