@@ -672,6 +672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detetorManager: {fileID: 798832547}
   flagController: {fileID: 418269034}
+  loadHeatMap: {fileID: 1604625235}
 --- !u!4 &221273809
 Transform:
   m_ObjectHideFlags: 0

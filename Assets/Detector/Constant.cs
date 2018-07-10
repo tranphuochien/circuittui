@@ -17,9 +17,9 @@
     //Depend on image feed detector, if size feed detector changing --> must measure screen projector
     public readonly static int TOPLEFT_X_SCREEN_PROJECTOR = 99;
     public readonly static int TOPLEFT_Y_SCREEN_PROJECTOR = 279;
-    public readonly static int RIGHTBOTTOM_X_SCREEN_PROJECTOR = 383;
+    public readonly static int RIGHTBOTTOM_X_SCREEN_PROJECTOR = 369;
     public readonly static int RIGHTBOTTOM_Y_SCREEN_PROJECTOR = 73;
-
+    
     public readonly static string TOKEN_BEGIN_POSITION = "0001:";
     public readonly static string TOKEN_BEGIN_URL = "0002:";
     public const string TOKEN_BEGIN_SHAKE = "0003";
@@ -32,6 +32,7 @@
     public const string TOKEN_BEGIN_SET_FLAG = "0010";
     public const string TOKEN_BEGIN_ANALYZE = "0011";
     public const string TOKEN_BEGIN_CLEAR_FLAG = "0012";
+    public const string TOKEN_BEGIN_HEATMAP = "0013";
     public readonly static string TOKEN_SPLIT = "|";
     public readonly static string TOKEN_END = "@";
 

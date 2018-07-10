@@ -30,7 +30,7 @@ public class LoadHeatMap : MonoBehaviour
     private void GenerateDummy16bitImage()
     {
 
-        b16bpp = new Bitmap(IMAGE_WIDTH, IMAGE_HEIGHT, PixelFormat.Format16bppRgb565);
+        /*b16bpp = new Bitmap(IMAGE_WIDTH, IMAGE_HEIGHT, PixelFormat.Format16bppRgb565);
 
         var rect = new Rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
         var bitmapData = b16bpp.LockBits(rect, ImageLockMode.WriteOnly, b16bpp.PixelFormat);
@@ -62,7 +62,7 @@ public class LoadHeatMap : MonoBehaviour
         b16bpp.Save("random.jpeg", ImageFormat.Jpeg);
 
         //FileHelper.WritePNGPicture(bitmapBytes, "E:\\" + "tempdata.png");
-        Debug.Log("saved");
+        Debug.Log("saved");*/
     }
 
     int count = 0;

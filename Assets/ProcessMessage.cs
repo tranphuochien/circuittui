@@ -11,6 +11,7 @@ public class ProcessMessage : MonoBehaviour
     static SocketV2 socket;
     public static DetetorManager detetorManager;
     public static FlagController flagController;
+    public static LoadHeatMap heatMapController;
     public static float DefaultFOV = -1;
     static int currentImageNumber = -1;
     static string currentMsg = "";
@@ -82,6 +83,10 @@ public class ProcessMessage : MonoBehaviour
             case Constant.TOKEN_BEGIN_GET:
                 SendMessageToClient();
                 break;
+            case Constant.TOKEN_BEGIN_HEATMAP:
+                UnityMainThreadDispatcher.Instance().Enqueue(LoadHeatMap());
+                break;
+
         }
         if (msgCode == Constant.TOKEN_BEGIN_SHAKE)
         {
@@ -106,6 +111,12 @@ public class ProcessMessage : MonoBehaviour
     private static IEnumerator Statistic()
     {
         flagController.StatisticBtnTrigger();
+        yield return null;
+    }
+
+    private static IEnumerator LoadHeatMap()
+    {
+        heatMapController.HeatMapBtnTrigger();
         yield return null;
     }
 

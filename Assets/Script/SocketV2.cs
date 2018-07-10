@@ -30,6 +30,7 @@ public class SocketV2 : MonoBehaviour {
         __ClientSockets = new List<SocketT2h>();
         ProcessMessage.detetorManager = detetorManager;
         ProcessMessage.flagController = flagController;
+        ProcessMessage.heatMapController = loadHeatMap;
         SetupServer();
     }
 
@@ -118,6 +119,7 @@ public class SocketV2 : MonoBehaviour {
     }
     public DetetorManager detetorManager;
     public FlagController flagController;
+    public LoadHeatMap loadHeatMap;
 
     public void SendDataAll(string noidung)
     {
